@@ -27,14 +27,29 @@
       <li><a href="https://vue-loader.vuejs.org/en" target="_blank">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
+    {{character}}
+    <button type="button" name="button" @click="nambahCharacter">NAMBAH CHARACTER</button>
   </div>
 </template>
 
 <script>
+import { charRefs } from '../firebase'
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  firebase: {
+    character: charRefs
+  },
+  methods: {
+    nambahCharacter () {
+      //push langsung object aja bisa
+      charRefs.push({
+        name: 'anime1',
+        gender: 'female'
+      })
+    }
   }
 }
 </script>
