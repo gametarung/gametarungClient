@@ -1,30 +1,25 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h3>Ecosystem</h3>
-    <Rooms></Rooms>
-    <ul>
-      <li><a href="https://router.vuejs.org/en/essentials/getting-started.html" target="_blank">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org/en/intro.html" target="_blank">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org/en" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
-    {{character}}
-    <button type="button" name="button" @click="nambahCharacter">NAMBAH CHARACTER</button>
+          <Rooms></Rooms>
+
+    
+    <CreateRoom></CreateRoom>
   </div>
 </template>
 
 <script>
 import { charRefs } from '../firebase'
 import Rooms from '@/components/Rooms'
+import CreateRoom from '@/components/CreateRoom'
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
   },
   components: {
-    Rooms: Rooms
+    Rooms: Rooms,
+    CreateRoom: CreateRoom
   },
   firebase: {
     character: charRefs
