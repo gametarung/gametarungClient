@@ -27,6 +27,7 @@
       <li><a href="https://vue-loader.vuejs.org/en" target="_blank">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
+    {{character}}
     <button type="button" name="button" @click="nambahCharacter">NAMBAH CHARACTER</button>
   </div>
 </template>
@@ -43,10 +44,11 @@ export default {
   },
   methods: {
     nambahCharacter () {
-      charRefs.push('udah nambah nih')
-    },
-    removeCharacter () {
-      
+      //push langsung object aja bisa
+      charRefs.push({
+        name: 'anime1',
+        gender: 'female'
+      })
     }
   }
 }
