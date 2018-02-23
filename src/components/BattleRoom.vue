@@ -188,7 +188,9 @@ export default {
       if(e==this.question.correct_answer){
         let target = self.$store.state.userId == 'user1' ? 'user2' : 'user1'
         this.attackOtherPlayer(self.$store.state.roomId, target , this.question.poin)
-      } 
+      } else {
+        alert('miss!! jawaban anda salah')
+      }
       
       self.changeTurn(self.$store.state.roomId)
       
