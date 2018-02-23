@@ -1,6 +1,4 @@
 <template lang="html">
-<<<<<<< c0003f910bcfaffe1fd4472fc3fe1449122b6f23
-=======
   
   <div class="col-md-4">
     <!-- <h1>{{Object.keys(data)}}</h1> -->
@@ -16,7 +14,6 @@
   </div>
 </div>
   </div>
->>>>>>> get all rooms
 
 </template>
 

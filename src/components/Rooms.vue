@@ -37,10 +37,10 @@ export default {
   },
   methods: {
     testRoom () {
-      db.ref(`room${this.nama}`).push({nama:this.nama, isOnGame: false})
+      db.ref(`rooms`).push({nama:this.nama, isOnGame: false})
     },
     showAllRoom () {
-      db.ref().once('value', snapshot => {
+      db.ref('rooms').once('value', snapshot => {
         for (let i in snapshot.val()) {
           this.Rooms.push(snapshot.val()[i])
         }
