@@ -26,16 +26,14 @@ export default {
     methods: {
         getCharacter () {
             charRefs.once("value", snapshot => {
-            for(let i in snapshot.val()){
-                this.characters.push(snapshot.val()[i])
-            }
+                for(let i in snapshot.val()){
+                    this.characters.push(snapshot.val()[i])
+                }
             })
         },
-        choose(character){
-            db.ref(`rooms/${this.$store.state.roomId}/${this.$store.state.userId}`).set({
-                character:character
-            })
-            this.$route.push({
+        choose(character) {
+            db.ref(`rooms/${this.$store.state.roomId}/${this.$store.state.userId}/selectedCharacter`).set(character)
+            this.$router.push({
                 name: 'battle'
             })
         }
