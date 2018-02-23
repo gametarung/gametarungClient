@@ -14,7 +14,7 @@
                   <br><br>
                   <div class="row">
                     <div class="col-md-12">
-                      <img :src="characters[1].image" alt="anime1">
+                      <img alt="anime1">
                     </div>
                     <div class="col-md-12">
                       <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
@@ -32,7 +32,7 @@
                   <br><br>
                   <div class="row">
                     <div class="col-md-12">
-                      <img :src="characters[0].image" alt="anime1">
+                      <img alt="anime1">
                     </div>
                     <div class="col-md-12">
                       <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
@@ -85,13 +85,17 @@
   </div>
 </template>
 <script>
-import { db } from '../firebase'
+import { db, roomRefs } from '../firebase'
 export default {
   name: 'battle',
   data () {
     return {
       characters: [],
       players: [],
+      users: {
+        user1: {hp: ''},
+        user2: {hp: ''}
+      },
       hp1: 'width: 100%',
       hp2: 'width: 100%',
       question: null,
@@ -99,19 +103,25 @@ export default {
     }
   },
   methods: {
-    showCharacters () {
-      db.ref('characters').once('value', snapshot => {
-        for(let i in snapshot.val()) {
-          this.characters.push(snapshot.val()[i])
-        }
+    firstMethod () {
+      let self = this
+      console.log('masuk firstmethod');
+      roomRefs.child(self.$store.state.roomId).once('value',function(snapshot){
+        self.users.user1 = snapshot.val().user1
+        self.users.user2 = snapshot.val().user2
       })
     },
     turn () {
-      db.ref('room-1').once('value', snapshot => {
-        // console.log(snapshot.val())
-        for(let i in snapshot.val()) {
-          this.players.push(snapshot.val()[i])
-        }
+      // db.ref('room-1').once('value', snapshot => {
+      //   // console.log(snapshot.val())
+      //   for(let i in snapshot.val()) {
+      //     this.players.push(snapshot.val()[i])
+      //   }
+      // }
+      let self = this
+      roomRefs.child(self.$store.state.roomId).on('value',function(snapshot){
+        self.users.user1.hp = snapshot.val().user1.hp
+        self.users.user2.hp = snapshot.val().user2.hp
       })
     },
     firstSkill () {
@@ -157,32 +167,37 @@ export default {
         })
     },
     questionAnswer(e) {
+      let self = this
       console.log(this.isTurn)
       if(e==this.question.correct_answer){
-        this.players.map(f=>{
-          console.log(f,Object.keys(f));
-          // db.ref('room-1').child(Object.keys(f)).set({
-          //   hp: f.isTurn-this.question.poin,
-          //   isTurn: !f.isTurn
-          // })
-        })
-      }else{
-        this.players.map(f=>{
-          console.log(f,Object.keys(f));
-          // db.ref('room-1').child(Object.keys(f)).set({
-          //   isTurn: !f.isTurn
-          // })
-        })
+        this.attackOtherPlayer(self.$store.state.roomId, self.$store.state.userId, this.question.poin)
       }
+      this.changeTurn(self.$store.state.roomId)
       this.question=null
     },
     getbackground(){
       var bg = ['fuji','sea','marvel1','marvel2','marvel3']
       this.background = bg[Math.floor(Math.random()*5)]
-    }
+    },
+    attackOtherPlayer(roomId, userIdTarget, damage){
+     roomRefs.child(roomId).child(userIdTarget).once("value", function(snapshot) {
+       let hp = snapshot.val().hp;
+       if( hp > 0){
+         let newHp = hp - damage;
+         roomRefs.child(roomId).child(userIdTarget).update({hp : newHp})
+       }
+     })
+   },
+   changeTurn(roomId){
+     roomRefs.child(roomId).child('user1').once("value", function(snapshot) {
+       let user1Turn = snapshot.val().isTurn;
+       roomRefs.child(roomId).child('user1').update({isTurn : !user1Turn})
+       roomRefs.child(roomId).child('user2').update({isTurn : user1Turn})
+     })
+   }
   },
   created () {
-    this.showCharacters()
+    this.firstMethod()
     this.turn()
     this.getbackground()
   }

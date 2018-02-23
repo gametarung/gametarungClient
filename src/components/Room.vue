@@ -43,7 +43,7 @@ export default {
               self.$store.dispatch('setUser', 'user2')
               // let key = roomRefs.child(roomId).push({ user2 : data}).key;
               self.$store.dispatch('setRoom', roomId)
-              // this.$router.push('/character')
+              self.$router.push('/character')
             }
             else{
               throw Error;
