@@ -137,6 +137,7 @@ export default {
         let mine = self.$store.state.userId == 'user1' ? 'user1' : 'user2'
         if (self.users.user1.hp === 0 || self.users.user2.hp === 0) {
              alert(self.users[mine].hp === 0 ?'game over' : 'you win')
+             self.$router.push('/')
         }
       })
     },
