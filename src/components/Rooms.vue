@@ -30,13 +30,9 @@ export default {
       db.ref(`rooms`).push({nama:this.nama, isOnGame: false})
     },
     showAllRoom () {
-      db.ref('rooms').once('value', snapshot => {
-
-          for (let i in snapshot.val()) {
-            this.Rooms.push(snapshot.val()[i])
-            this.RoomKeys.push(i)
-          
-        }
+      db.ref('rooms').on('child_added', snapshot => {
+        this.Rooms.push(snapshot.val())
+        this.RoomKeys.push(snapshot.key)
       })
     },
     populateAllRooms () {

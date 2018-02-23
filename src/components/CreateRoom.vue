@@ -26,8 +26,11 @@ export default {
         selectedCharacter : this.char,
         isTurn : true
       }
-      localStorage.setItem('id', 1)
-      roomRefs.push({ user1 : data}).key;
+      // localStorage.setItem('id', 1)
+      this.$store.dispatch('setUser', 'user1')
+      let key = roomRefs.push({ user1 : data}).key;
+      this.$store.dispatch('setRoom', key)
+      this.$router.push('/character')
     },
   }
 }

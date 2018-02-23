@@ -1,57 +1,50 @@
 <template>
   <div class="battle">
-    <div class="container">
-      <div class="jumbotron" :id="background">
-        <div class="rows">
-          <div class="row">
-            <div class="col-md-5">
-              <button type="button" class="btn btn-primary">Yanto trimandi</button>
-              <div class="progress">
-                <div class="progress-bar bg-danger" role="progressbar" :style="hp1" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-              <br><br>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="container">
+          <div class="jumbotron" :id="background">
+            <div class="rows">
               <div class="row">
-                <div class="col-md-12">
-                  <img :src="characters[1].image" alt="anime1">
+                <div class="col-md-5">
+                  <button type="button" class="btn btn-primary">Yanto trimandi</button>
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" :style="hp1" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <br><br>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <img :src="characters[1].image" alt="anime1">
+                    </div>
+                    <div class="col-md-12">
+                      <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-12">
-                  <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                <div class="col-md-2">
+                  <img src="https://media.giphy.com/media/l4pTkNEd2P4MWo9iw/giphy.gif" alt="" style="width:100%">
                 </div>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <img src="https://media.giphy.com/media/l4pTkNEd2P4MWo9iw/giphy.gif" alt="" style="width:100%">
-            </div>
-            <div class="col-md-5">
-              <button type="button" class="btn btn-primary">Arif trimanda</button>
-              <div class="progress">
-                <div class="progress-bar bg-danger" role="progressbar" :style="hp2" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-              <br><br>
-              <div class="row">
-                <div class="col-md-12">
-                  <img :src="characters[0].image" alt="anime1">
-                </div>
-                <div class="col-md-12">
-                  <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                <div class="col-md-5">
+                  <button type="button" class="btn btn-primary">Arif trimanda</button>
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" :style="hp2" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <br><br>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <img :src="characters[0].image" alt="anime1">
+                    </div>
+                    <div class="col-md-12">
+                      <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="rows">
-        <div class="row">
-          <div class="col-md-4">
-            <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 1</button>
-          </div>
-          <div class="col-md-4">
-            <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 2</button>
-          </div>
-          <div class="col-md-4">
-            <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 3</button>
-          </div>
-        </div>
+      <div class="col-md-4">
         <div v-if="question" class="rows">
           <div class="modal-active">
             <div class="modal-dialog" role="document">
@@ -71,19 +64,25 @@
               </div>
             </div>
           </div>
-          <!-- <div class="row" >
-            <h1>Your Question</h1><br><br>
-          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="rows">
           <div class="row">
-            {{question.question}}
+            <div class="col-md-4">
+              <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 1</button>
+            </div>
+            <div class="col-md-4">
+              <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 2</button>
+            </div>
+            <div class="col-md-4">
+              <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 3</button>
+            </div>
           </div>
-          <div class="row">
-            <button type="button" v-for="elem in question.incorrect_answers" :key="elem.key" @click="questionAnswer(elem)">{{elem}}</button>
-          </div> -->
         </div>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 <script>
 import { db } from '../firebase'
