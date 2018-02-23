@@ -1,6 +1,6 @@
 <template>
-  <div class="col-md-4">
-    <img :src="character.image" alt="" id="image">
+  <div class="col-md-4" >
+    <img :src="character.image" alt="" id="image" @click="choose(character)">
     <h3>{{character.name}}</h3>
   </div>
 </template>
@@ -18,6 +18,11 @@ export default {
     props: ['character'],
     created () {
 
+    },
+    methods:{
+        choose(c){
+            this.$emit('choose',c)
+        }
     }
 }
 </script>

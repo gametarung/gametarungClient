@@ -1,7 +1,7 @@
 <template>
   <div id="test">
       <div class="row">
-          <CharacterImage v-for="character in characters" :key="character" :character="character"/>
+          <CharacterImage v-for="character in characters" :key="character.name" :character="character" @choose="choose"/>
       </div>
   </div>
 </template>
@@ -26,13 +26,14 @@ export default {
     methods: {
         getCharacter () {
             charRefs.once("value", snapshot => {
-            console.log('INI ADALAH SNAPSHOT', snapshot.val());
             for(let i in snapshot.val()){
-                //console.log(i)
                 this.characters.push(snapshot.val()[i])
             }
             })
-        
+        },
+        choose(character){
+            console.log('tes')
+            console.log(character)
         }
     }
 }
