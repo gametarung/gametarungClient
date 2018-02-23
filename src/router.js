@@ -21,6 +21,11 @@ export default new Router({
       component: About
     },
     {
+      path: '/character',
+      name: 'character',
+      component: CharacterSelect
+    },
+    {
       path: '/battle',
       name: 'battle',
       component: BattleRoom
