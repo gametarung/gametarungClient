@@ -112,8 +112,7 @@ export default {
         user2: {hp: ''}
       },
       question: null,
-      background:'',
-      count: 0
+      background:''
     }
   },
   methods: {
@@ -123,32 +122,22 @@ export default {
       roomRefs.child(self.$store.state.roomId).on('value',function(snapshot){
         self.users.user1 = snapshot.val().user1
         self.users.user2 = snapshot.val().user2
-        self.$store.dispatch('setTurn', !self.$store.state.isTurn)
-        // let target = self.$store.state.userId == 'user1' ? 'user2' : 'user1'
-        // if (self.users.user1.hp === 0 || self.users.user2.hp === 0) {
-        //   if (self.$store.state.userId === target) {
-        //     alert('game over')
-        //   } else {
-        //     alert('you win')
-        //   }
-        // }
-        
+        self.$store.dispatch('setTurn', self.users[self.$store.state.userId].isTurn) 
       })
     },
     turn () {
-      // db.ref('room-1').once('value', snapshot => {
-      //   // console.log(snapshot.val())
-      //   for(let i in snapshot.val()) {
-      //     this.players.push(snapshot.val()[i])
-      //   }
-      // }
       let self = this
       roomRefs.child(self.$store.state.roomId).on('value',function(snapshot){
-        self.users.user1.hp = snapshot.val().user1.hp 
         self.users.user1.isTurn = snapshot.val().user1.isTurn
         self.users.user2.isTurn = snapshot.val().user2.isTurn
-        
+
+        self.users.user1.hp = snapshot.val().user1.hp 
         self.users.user2.hp = snapshot.val().user2.hp
+        
+        let mine = self.$store.state.userId == 'user1' ? 'user1' : 'user2'
+        if (self.users.user1.hp === 0 || self.users.user2.hp === 0) {
+             alert(self.users[mine].hp === 0 ?'game over' : 'you win')
+        }
       })
     },
     firstSkill () {
@@ -199,13 +188,10 @@ export default {
       if(e==this.question.correct_answer){
         let target = self.$store.state.userId == 'user1' ? 'user2' : 'user1'
         this.attackOtherPlayer(self.$store.state.roomId, target , this.question.poin)
-        self.changeTurn(self.$store.state.roomId)
-        // self.$store.dispatch('setTurn', !self.$store.state.isTurn)
-      } else {
-        // self.$store.dispatch('setTurn', !self.$store.state.isTurn)
-        this.attackOtherPlayer(self.$store.state.roomId, target ,0)
-        self.changeTurn(self.$store.state.roomId)
-      }
+      } 
+      
+      self.changeTurn(self.$store.state.roomId)
+      
       this.question=null
     },
     getbackground(){
@@ -217,15 +203,7 @@ export default {
        let hp = snapshot.val().hp;
        let newHp = hp - damage;
        let updateHp = newHp < 0 ? 0 : newHp;
-       roomRefs.child(roomId).child(userIdTarget).update({hp : updateHp}, () => {
-         let myStatus = self.$store.state.userId == 'user1' ? 'user1' : 'user2'
-         if (self.users.user1.hp === 0 || self.users.user2.hp === 0) {
-           if (this.count == 0) {
-             alert(self.users[myStatus].hp === 0 ?'game over' : 'you win')
-           }
-           this.count++
-         }
-       })
+       roomRefs.child(roomId).child(userIdTarget).update({hp : updateHp})
      })
    },
    changeTurn(roomId){

@@ -53,12 +53,18 @@ export default {
         .catch(function(err){
           console.error(err);
         });
+    },
+    fullChecker () {
+      if (Object.keys(this.data).length <= 2 ) {
+        this.isFull = false
+      }
     }
   },
   data () {
     return {
       modal: false,
-      username: ''
+      username: '',
+      isFull: true
     }
   }
 }
