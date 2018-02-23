@@ -67,32 +67,32 @@
         </div>
       </div>
       <div class="container">
-        <div v-if="$store.state.isTurn" class="rows">
+        <div v-if="users.user1.isTurn && $store.state.isTurn" class="rows">
           <div class="row">
             <div class="col-md-4">
-              <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 1</button>
+              <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">{{ users.user1.selectedCharacter.skills.skill1 }}</button>
             </div>
             <div class="col-md-4">
-              <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 2</button>
+              <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">{{ users.user1.selectedCharacter.skills.skill2 }}</button>
             </div>
             <div class="col-md-4">
-              <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 3</button>
+              <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">{{ users.user1.selectedCharacter.skills.skill3 }}</button>
             </div>
           </div>
         </div>
-        <!-- <div v-if="users.user2.isTurn && $store.state.isTurn" class="rows">
+        <div v-if="users.user2 && users.user2.isTurn && $store.state.isTurn" class="rows">
           <div class="row">
             <div class="col-md-4">
-              <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 4</button>
+              <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">{{ users.user2.selectedCharacter.skills.skill1 }}</button>
             </div>
             <div class="col-md-4">
-              <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 5</button>
+              <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">{{ users.user2.selectedCharacter.skills.skill2 }}</button>
             </div>
             <div class="col-md-4">
-              <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 6</button>
+              <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">{{ users.user2.selectedCharacter.skills.skill3 }}</button>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
     <label hidden> {{ characters }} </label>
