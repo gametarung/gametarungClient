@@ -7,35 +7,35 @@
             <div class="rows">
               <div class="row">
                 <div class="col-md-5">
-                  <button type="button" class="btn btn-primary">Yanto trimandi</button>
+                  <button type="button" class="btn btn-primary">{{ users.user1.name }}</button>
                   <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" :style="hp1" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <br><br>
                   <div class="row">
                     <div class="col-md-12">
-                      <img alt="anime1">
+                      <img :src="users.user1.selectedCharacter.image" alt="anime1">
                     </div>
                     <div class="col-md-12">
-                      <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                      <button type="button" class="btn btn-primary btn-lg btn-block disabled">{{ users.user1.selectedCharacter.name }}</button>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-2">
                   <img src="https://media.giphy.com/media/l4pTkNEd2P4MWo9iw/giphy.gif" alt="" style="width:100%">
                 </div>
-                <div class="col-md-5">
-                  <button type="button" class="btn btn-primary">Arif trimanda</button>
+                <div v-if="users.user2" class="col-md-5">
+                  <button type="button" class="btn btn-primary">{{ users.user2.name }}</button>
                   <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" :style="hp2" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <br><br>
                   <div class="row">
                     <div class="col-md-12">
-                      <img alt="anime1">
+                      <img :src="users.user2.selectedCharacter.image" alt="anime1">
                     </div>
                     <div class="col-md-12">
-                      <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                      <button type="button" class="btn btn-primary btn-lg btn-block disabled">{{ users.user2.selectedCharacter.name }}</button>
                     </div>
                   </div>
                 </div>
@@ -67,7 +67,7 @@
         </div>
       </div>
       <div class="container">
-        <div class="rows">
+        <div v-if="$store.state.isTurn" class="rows">
           <div class="row">
             <div class="col-md-4">
               <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 1</button>
@@ -80,8 +80,23 @@
             </div>
           </div>
         </div>
+        <!-- <div v-if="users.user2.isTurn && $store.state.isTurn" class="rows">
+          <div class="row">
+            <div class="col-md-4">
+              <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 4</button>
+            </div>
+            <div class="col-md-4">
+              <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 5</button>
+            </div>
+            <div class="col-md-4">
+              <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 6</button>
+            </div>
+          </div>
+        </div> -->
       </div>
     </div>
+    <label hidden> {{ characters }} </label>
+    <label hidden> {{ users }} </label>
   </div>
 </template>
 <script>
@@ -96,19 +111,28 @@ export default {
         user1: {hp: ''},
         user2: {hp: ''}
       },
-      hp1: 'width: 100%',
-      hp2: 'width: 100%',
       question: null,
-      background:''
+      background:'',
+      count: 0
     }
   },
   methods: {
     firstMethod () {
       let self = this
       console.log('masuk firstmethod');
-      roomRefs.child(self.$store.state.roomId).once('value',function(snapshot){
+      roomRefs.child(self.$store.state.roomId).on('value',function(snapshot){
         self.users.user1 = snapshot.val().user1
         self.users.user2 = snapshot.val().user2
+        self.$store.dispatch('setTurn', !self.$store.state.isTurn)
+        // let target = self.$store.state.userId == 'user1' ? 'user2' : 'user1'
+        // if (self.users.user1.hp === 0 || self.users.user2.hp === 0) {
+        //   if (self.$store.state.userId === target) {
+        //     alert('game over')
+        //   } else {
+        //     alert('you win')
+        //   }
+        // }
+        
       })
     },
     turn () {
@@ -120,7 +144,10 @@ export default {
       // }
       let self = this
       roomRefs.child(self.$store.state.roomId).on('value',function(snapshot){
-        self.users.user1.hp = snapshot.val().user1.hp
+        self.users.user1.hp = snapshot.val().user1.hp 
+        self.users.user1.isTurn = snapshot.val().user1.isTurn
+        self.users.user2.isTurn = snapshot.val().user2.isTurn
+        
         self.users.user2.hp = snapshot.val().user2.hp
       })
     },
@@ -170,9 +197,15 @@ export default {
       let self = this
       console.log(this.isTurn)
       if(e==this.question.correct_answer){
-        this.attackOtherPlayer(self.$store.state.roomId, self.$store.state.userId, this.question.poin)
+        let target = self.$store.state.userId == 'user1' ? 'user2' : 'user1'
+        this.attackOtherPlayer(self.$store.state.roomId, target , this.question.poin)
+        self.changeTurn(self.$store.state.roomId)
+        // self.$store.dispatch('setTurn', !self.$store.state.isTurn)
+      } else {
+        // self.$store.dispatch('setTurn', !self.$store.state.isTurn)
+        this.attackOtherPlayer(self.$store.state.roomId, target ,0)
+        self.changeTurn(self.$store.state.roomId)
       }
-      this.changeTurn(self.$store.state.roomId)
       this.question=null
     },
     getbackground(){
@@ -182,24 +215,42 @@ export default {
     attackOtherPlayer(roomId, userIdTarget, damage){
      roomRefs.child(roomId).child(userIdTarget).once("value", function(snapshot) {
        let hp = snapshot.val().hp;
-       if( hp > 0){
-         let newHp = hp - damage;
-         roomRefs.child(roomId).child(userIdTarget).update({hp : newHp})
-       }
+       let newHp = hp - damage;
+       let updateHp = newHp < 0 ? 0 : newHp;
+       roomRefs.child(roomId).child(userIdTarget).update({hp : updateHp}, () => {
+         let myStatus = self.$store.state.userId == 'user1' ? 'user1' : 'user2'
+         if (self.users.user1.hp === 0 || self.users.user2.hp === 0) {
+           if (this.count == 0) {
+             alert(self.users[myStatus].hp === 0 ?'game over' : 'you win')
+           }
+           this.count++
+         }
+       })
      })
    },
    changeTurn(roomId){
-     roomRefs.child(roomId).child('user1').once("value", function(snapshot) {
-       let user1Turn = snapshot.val().isTurn;
-       roomRefs.child(roomId).child('user1').update({isTurn : !user1Turn})
-       roomRefs.child(roomId).child('user2').update({isTurn : user1Turn})
+       roomRefs.child(roomId).child('user1').once("value", function(snapshot) {
+       roomRefs.child(roomId).child('user1').update({isTurn : !snapshot.val().isTurn})
      })
+       roomRefs.child(roomId).child('user2').once("value", function(snapshot) {
+       roomRefs.child(roomId).child('user2').update({isTurn : !snapshot.val().isTurn})
+     })
+     console.log(!this.$store.state.isTurn, 'arif')
    }
   },
   created () {
     this.firstMethod()
     this.turn()
     this.getbackground()
+    
+  },
+  computed: {
+    hp1 () {
+      return `width: ${this.users.user1.hp}%;` 
+    },
+    hp2 () {
+      return `width: ${this.users.user2.hp}%;` 
+    }
   }
 }
 </script>

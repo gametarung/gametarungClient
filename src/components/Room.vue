@@ -43,6 +43,7 @@ export default {
               self.$store.dispatch('setUser', 'user2')
               // let key = roomRefs.child(roomId).push({ user2 : data}).key;
               self.$store.dispatch('setRoom', roomId)
+              self.$store.dispatch('setTurn', false)
               self.$router.push('/character')
             }
             else{

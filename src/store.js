@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     roomId: null,
-    userId: null
+    userId: null,
+    isTurn: null
   },
   mutations: {
     setUserId (state, payload) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     setRoomId (state, payload) {
       state.roomId = payload
+    },
+    setTurn (state, payload) {
+      state.isTurn = payload
     }
   },
   actions: {
@@ -22,6 +26,9 @@ export default new Vuex.Store({
     },
     setRoom ({ commit }, payload) {
       commit('setRoomId', payload)
+    },
+    setTurn ({ commit }, payload) {
+      commit('setTurn', payload)
     }
   }
 })

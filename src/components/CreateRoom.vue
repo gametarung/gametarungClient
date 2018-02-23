@@ -30,7 +30,9 @@ export default {
       this.$store.dispatch('setUser', 'user1')
       let key = roomRefs.push({ user1 : data}).key;
       this.$store.dispatch('setRoom', key)
+      this.$store.dispatch('setTurn', true)
       this.$router.push('/character')
+      
     },
   }
 }
