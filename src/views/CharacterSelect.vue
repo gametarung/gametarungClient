@@ -1,14 +1,14 @@
 <template>
   <div id="test">
       <div class="row">
-          <CharacterImage v-for="character in characters" :key="character" :character="character"/>
+          <CharacterImage v-for="character in characters" :key="character.name" :character="character" @choose="choose"/>
       </div>
   </div>
 </template>
 
 <script>
 import CharacterImage from '../components/CharacterImage.vue'
-import { charRefs } from '../firebase'
+import { db,charRefs } from '../firebase'
 
 export default {
     data () {
@@ -26,13 +26,16 @@ export default {
     methods: {
         getCharacter () {
             charRefs.once("value", snapshot => {
-            console.log('INI ADALAH SNAPSHOT', snapshot.val());
-            for(let i in snapshot.val()){
-                //console.log(i)
-                this.characters.push(snapshot.val()[i])
-            }
+                for(let i in snapshot.val()){
+                    this.characters.push(snapshot.val()[i])
+                }
             })
-        
+        },
+        choose(character) {
+            db.ref(`rooms/${this.$store.state.roomId}/${this.$store.state.userId}/selectedCharacter`).set(character)
+            this.$router.push({
+                name: 'battle'
+            })
         }
     }
 }
