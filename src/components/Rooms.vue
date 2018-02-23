@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="row">
     <input type="text" name="" value="" v-model="nama">
-    
+
     <button type="button" name="button" @click="testRoom">Test dynamic route "CREATE room 1"</button>
     {{Rooms}}
     <div class="row">
@@ -36,7 +36,7 @@ export default {
       })
     },
     populateAllRooms () {
-      
+
     }
   },
   created () {
