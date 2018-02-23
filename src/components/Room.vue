@@ -1,6 +1,6 @@
 <template lang="html">
   
-  <div class="col-md-4">
+  <div class="col-md-4" v-if="!isFull">
     <!-- <h1>{{Object.keys(data)}}</h1> -->
     
     <!-- <h5>{{ data[Object.keys(data)].nama}}</h5> -->
@@ -53,13 +53,23 @@ export default {
         .catch(function(err){
           console.error(err);
         });
+    },
+    fullChecker () {
+      let length = Object.keys(this.data).length
+      if(length == 2) {
+        this.isFull = true
+      }
     }
   },
   data () {
     return {
       modal: false,
-      username: ''
+      username: '',
+      isFull: false
     }
+  },
+  created () {
+    this.fullChecker()
   }
 }
 </script>
