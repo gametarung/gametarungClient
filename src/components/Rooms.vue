@@ -1,23 +1,24 @@
 <template lang="html">
-  <div class="row">
-    <input type="text" name="" value="" v-model="nama">
-
-    <button type="button" name="button" @click="testRoom">Test dynamic route "CREATE room 1"</button>
-    {{Rooms}}
+  <div class="">
     <div class="row">
-      <RoomCard></RoomCard>
+      <div class="row">
+        <RoomCard v-for="(r,index) in Rooms" :data="r" :keys="RoomKeys[index]"></RoomCard>
+      </div>
     </div>
   </div>
+  
 </template>
 
 <script>
 import { db } from '../firebase'
 import RoomCard from '@/components/Room'
+
 export default {
   data () {
     return {
       nama: null,
       Rooms: [],
+      RoomKeys: [],
       allRooms: []
     }
   },
@@ -26,13 +27,12 @@ export default {
   },
   methods: {
     testRoom () {
-      db.ref(`room${this.nama}`).push({nama:this.nama, isOnGame: false})
+      db.ref(`rooms`).push({nama:this.nama, isOnGame: false})
     },
     showAllRoom () {
-      db.ref().once('value', snapshot => {
-        for (let i in snapshot.val()) {
-          this.Rooms.push(snapshot.val()[i])
-        }
+      db.ref('rooms').on('child_added', snapshot => {
+        this.Rooms.push(snapshot.val())
+        this.RoomKeys.push(snapshot.key)
       })
     },
     populateAllRooms () {

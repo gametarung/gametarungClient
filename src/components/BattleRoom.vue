@@ -1,57 +1,50 @@
 <template>
   <div class="battle">
-    <div class="container">
-      <div class="jumbotron" :id="background">
-        <div class="rows">
-          <div class="row">
-            <div class="col-md-5">
-              <button type="button" class="btn btn-primary">Yanto trimandi</button>
-              <div class="progress">
-                <div class="progress-bar bg-danger" role="progressbar" :style="hp1" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-              <br><br>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="container">
+          <div class="jumbotron" :id="background">
+            <div class="rows">
               <div class="row">
-                <div class="col-md-12">
-                  <img :src="characters[1].image" alt="anime1">
+                <div class="col-md-5">
+                  <button type="button" class="btn btn-primary">Yanto trimandi</button>
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" :style="hp1" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <br><br>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <img alt="anime1">
+                    </div>
+                    <div class="col-md-12">
+                      <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-12">
-                  <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                <div class="col-md-2">
+                  <img src="https://media.giphy.com/media/l4pTkNEd2P4MWo9iw/giphy.gif" alt="" style="width:100%">
                 </div>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <img src="https://media.giphy.com/media/l4pTkNEd2P4MWo9iw/giphy.gif" alt="" style="width:100%">
-            </div>
-            <div class="col-md-5">
-              <button type="button" class="btn btn-primary">Arif trimanda</button>
-              <div class="progress">
-                <div class="progress-bar bg-danger" role="progressbar" :style="hp2" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-              <br><br>
-              <div class="row">
-                <div class="col-md-12">
-                  <img :src="characters[0].image" alt="anime1">
-                </div>
-                <div class="col-md-12">
-                  <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                <div class="col-md-5">
+                  <button type="button" class="btn btn-primary">Arif trimanda</button>
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" :style="hp2" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <br><br>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <img alt="anime1">
+                    </div>
+                    <div class="col-md-12">
+                      <button type="button" class="btn btn-primary btn-lg btn-block disabled">Character Name</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="rows">
-        <div class="row">
-          <div class="col-md-4">
-            <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 1</button>
-          </div>
-          <div class="col-md-4">
-            <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 2</button>
-          </div>
-          <div class="col-md-4">
-            <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 3</button>
-          </div>
-        </div>
+      <div class="col-md-4">
         <div v-if="question" class="rows">
           <div class="modal-active">
             <div class="modal-dialog" role="document">
@@ -71,28 +64,38 @@
               </div>
             </div>
           </div>
-          <!-- <div class="row" >
-            <h1>Your Question</h1><br><br>
-          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="rows">
           <div class="row">
-            {{question.question}}
+            <div class="col-md-4">
+              <button v-if="!question" @click="firstSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 1</button>
+            </div>
+            <div class="col-md-4">
+              <button v-if="!question" @click="secondSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 2</button>
+            </div>
+            <div class="col-md-4">
+              <button v-if="!question" @click="thirdSkill" type="button" class="btn btn-primary btn-lg btn-block">Jurus 3</button>
+            </div>
           </div>
-          <div class="row">
-            <button type="button" v-for="elem in question.incorrect_answers" :key="elem.key" @click="questionAnswer(elem)">{{elem}}</button>
-          </div> -->
         </div>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 <script>
-import { db } from '../firebase'
+import { db, roomRefs } from '../firebase'
 export default {
   name: 'battle',
   data () {
     return {
       characters: [],
       players: [],
+      users: {
+        user1: {hp: ''},
+        user2: {hp: ''}
+      },
       hp1: 'width: 100%',
       hp2: 'width: 100%',
       question: null,
@@ -100,19 +103,25 @@ export default {
     }
   },
   methods: {
-    showCharacters () {
-      db.ref('characters').once('value', snapshot => {
-        for(let i in snapshot.val()) {
-          this.characters.push(snapshot.val()[i])
-        }
+    firstMethod () {
+      let self = this
+      console.log('masuk firstmethod');
+      roomRefs.child(self.$store.state.roomId).once('value',function(snapshot){
+        self.users.user1 = snapshot.val().user1
+        self.users.user2 = snapshot.val().user2
       })
     },
     turn () {
-      db.ref('room-1').once('value', snapshot => {
-        // console.log(snapshot.val())
-        for(let i in snapshot.val()) {
-          this.players.push(snapshot.val()[i])
-        }
+      // db.ref('room-1').once('value', snapshot => {
+      //   // console.log(snapshot.val())
+      //   for(let i in snapshot.val()) {
+      //     this.players.push(snapshot.val()[i])
+      //   }
+      // }
+      let self = this
+      roomRefs.child(self.$store.state.roomId).on('value',function(snapshot){
+        self.users.user1.hp = snapshot.val().user1.hp
+        self.users.user2.hp = snapshot.val().user2.hp
       })
     },
     firstSkill () {
@@ -158,32 +167,37 @@ export default {
         })
     },
     questionAnswer(e) {
+      let self = this
       console.log(this.isTurn)
       if(e==this.question.correct_answer){
-        this.players.map(f=>{
-          console.log(f,Object.keys(f));
-          // db.ref('room-1').child(Object.keys(f)).set({
-          //   hp: f.isTurn-this.question.poin,
-          //   isTurn: !f.isTurn
-          // })
-        })
-      }else{
-        this.players.map(f=>{
-          console.log(f,Object.keys(f));
-          // db.ref('room-1').child(Object.keys(f)).set({
-          //   isTurn: !f.isTurn
-          // })
-        })
+        this.attackOtherPlayer(self.$store.state.roomId, self.$store.state.userId, this.question.poin)
       }
+      this.changeTurn(self.$store.state.roomId)
       this.question=null
     },
     getbackground(){
       var bg = ['fuji','sea','marvel1','marvel2','marvel3']
       this.background = bg[Math.floor(Math.random()*5)]
-    }
+    },
+    attackOtherPlayer(roomId, userIdTarget, damage){
+     roomRefs.child(roomId).child(userIdTarget).once("value", function(snapshot) {
+       let hp = snapshot.val().hp;
+       if( hp > 0){
+         let newHp = hp - damage;
+         roomRefs.child(roomId).child(userIdTarget).update({hp : newHp})
+       }
+     })
+   },
+   changeTurn(roomId){
+     roomRefs.child(roomId).child('user1').once("value", function(snapshot) {
+       let user1Turn = snapshot.val().isTurn;
+       roomRefs.child(roomId).child('user1').update({isTurn : !user1Turn})
+       roomRefs.child(roomId).child('user2').update({isTurn : user1Turn})
+     })
+   }
   },
   created () {
-    this.showCharacters()
+    this.firstMethod()
     this.turn()
     this.getbackground()
   }
