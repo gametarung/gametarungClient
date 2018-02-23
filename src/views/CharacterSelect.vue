@@ -8,7 +8,7 @@
 
 <script>
 import CharacterImage from '../components/CharacterImage.vue'
-import { charRefs } from '../firebase'
+import { db,charRefs } from '../firebase'
 
 export default {
     data () {
@@ -32,8 +32,12 @@ export default {
             })
         },
         choose(character){
-            console.log('tes')
-            console.log(character)
+            db.ref(`rooms/${this.$store.state.roomId}/${this.$store.state.userId}`).set({
+                character:character
+            })
+            this.$route.push({
+                name: 'battle'
+            })
         }
     }
 }
