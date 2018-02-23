@@ -1,10 +1,11 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+        <CreateRoom></CreateRoom>
           <Rooms></Rooms>
 
     
-    <CreateRoom></CreateRoom>
+
   </div>
 </template>
 
